@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#10243a">
+  <meta name="description" content="FuzzyLab is a live student performance analytics dashboard powered by explainable fuzzy inference. Evaluate profiles, inspect signals, compare scenarios and export insights.">
+  <title>FuzzyLab | Student Performance Analytics</title>
+  <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="fuzzy-engine.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <div class="app-shell" id="top">
+    <aside class="sidebar" aria-label="Student input controls">
+      <div class="brand" aria-label="FuzzyLab student performance intelligence">
+        <span class="brand-symbol" aria-hidden="true">ƒ<span class="brand-dot">.</span></span>
+        <span><strong>FuzzyLab</strong><small>PERFORMANCE ANALYTICS</small></span>
+      </div>
+      <div class="sidebar-head">
+        <div class="eyebrow eyebrow-side"><span class="eyebrow-line"></span> PROFILE INPUTS</div>
+        <h2>Student profile</h2>
+        <p>Adjust the inputs to update the analysis instantly.</p>
+      </div>
+      <div class="input-stack">
+        <div class="input-item">
+          <div class="input-label"><label for="attendance-range">Attendance</label><span class="input-hint">0–100%</span></div>
+          <div class="slider-row"><input type="range" id="attendance-range" min="0" max="100" step="1" value="75" aria-label="Attendance percentage slider"><input type="number" id="attendance-number" min="0" max="100" step="1" value="75" aria-label="Attendance percent" class="number-field"><span class="unit">%</span></div>
+          <div class="scale"><span>0%</span><span>100%</span></div>
+        </div>
+        <div class="input-item">
+          <div class="input-label"><label for="assignment-range">Assignment score</label><span class="input-hint">0–100</span></div>
+          <div class="slider-row"><input type="range" id="assignment-range" min="0" max="100" step="1" value="70" aria-label="Assignment score slider"><input type="number" id="assignment-number" min="0" max="100" step="1" value="70" aria-label="Assignment score" class="number-field"></div>
+          <div class="scale"><span>0</span><span>100</span></div>
+        </div>
+        <div class="input-item">
+          <div class="input-label"><label for="exam-range">Exam score</label><span class="input-hint">0–100</span></div>
+          <div class="slider-row"><input type="range" id="exam-range" min="0" max="100" step="1" value="65" aria-label="Exam score slider"><input type="number" id="exam-number" min="0" max="100" step="1" value="65" aria-label="Exam score" class="number-field"></div>
+          <div class="scale"><span>0</span><span>100</span></div>
+        </div>
+        <div class="input-item">
+          <div class="input-label"><label for="participation-range">Class participation</label><span class="input-hint">0–10</span></div>
+          <div class="slider-row"><input type="range" id="participation-range" min="0" max="10" step="0.5" value="6" aria-label="Class participation slider"><input type="number" id="participation-number" min="0" max="10" step="0.5" value="6" aria-label="Class participation" class="number-field"><span class="unit">/10</span></div>
+          <div class="scale"><span>0</span><span>10</span></div>
+        </div>
+      </div>
+      <div class="presets-block">
+        <div class="section-eyebrow">QUICK PROFILES</div>
+        <div class="preset-grid" aria-label="Example profiles">
+          <button type="button" data-preset="balanced" class="preset-button active" aria-pressed="true">Balanced</button>
+          <button type="button" data-preset="excellent" class="preset-button" aria-pressed="false">High achiever</button>
+          <button type="button" data-preset="support" class="preset-button" aria-pressed="false">Needs support</button>
+          <button type="button" data-preset="attendance" class="preset-button" aria-pressed="false">Low attendance</button>
+        </div>
+      </div>
+      <div class="sidebar-actions">
+        <button id="download-report" type="button" class="button button-primary"><span aria-hidden="true">↓</span> Export report</button>
+        <button id="reset-inputs" type="button" class="button button-secondary"><span aria-hidden="true">↺</span> Reset values</button>
+      </div>
+      <div class="sidebar-note"><span class="note-icon" aria-hidden="true">◎</span><span>Runs entirely in your browser. No student data is stored or uploaded.</span></div>
+    </aside>
+    <main class="main-content">
+      <div class="topbar">
+        <div class="breadcrumb">ANALYTICS <span>/</span> STUDENT PERFORMANCE</div>
+        <div class="online-pill"><span class="online-dot"></span> LIVE RESULTS</div>
+      </div>
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-copy">
+          <div class="hero-kicker">MAMDANI FUZZY INFERENCE</div>
+          <h1 id="hero-title">Student Performance<br><em>Intelligence Studio.</em></h1>
+          <p>Turn attendance, assignments, exams, and participation into a transparent, explainable performance estimate using fuzzy logic.</p>
+          <div class="hero-tags"><span>4 Student Inputs</span><span>18 Inference Rules</span><span>Centroid Output</span></div>
+        </div>
+        <div class="hero-visual" aria-hidden="true"><div class="orbit orbit-a"></div><div class="orbit orbit-b"></div><div class="orbit orbit-c"></div><div class="hero-core"><span>µ</span><small>0 → 1</small></div><div class="satellite s1"></div><div class="satellite s2"></div><div class="satellite s3"></div></div>
+      </section>
+      <nav class="tabs" role="tablist" aria-label="Analytics views">
+        <button type="button" role="tab" id="nav-dashboard" class="tab active" aria-selected="true" aria-controls="tab-dashboard" data-tab="dashboard"><span aria-hidden="true">◫</span> Dashboard</button>
+        <button type="button" role="tab" id="nav-rules" class="tab" aria-selected="false" aria-controls="tab-rules" tabindex="-1" data-tab="rules"><span aria-hidden="true">≡</span> Inference Rules</button>
+        <button type="button" role="tab" id="nav-memberships" class="tab" aria-selected="false" aria-controls="tab-memberships" tabindex="-1" data-tab="memberships"><span aria-hidden="true">∿</span> Input Signals</button>
+        <button type="button" role="tab" id="nav-compare" class="tab" aria-selected="false" aria-controls="tab-compare" tabindex="-1" data-tab="compare"><span aria-hidden="true">⇄</span> Compare Profiles</button>
+
+      </nav>
+      <div id="error-notice" class="error-notice" role="alert" hidden></div>
+      <section id="tab-dashboard" class="tab-panel" role="tabpanel" aria-labelledby="nav-dashboard">
+        <div class="section-title"><div><p class="eyebrow">REAL-TIME EVALUATION</p><h2>Performance overview</h2></div><span class="small-label"><span class="small-pulse"></span> CALCULATED LIVE</span></div>
+        <div class="metrics-grid" aria-live="polite">
+          <article class="metric"><div class="metric-head"><span>Fuzzy score</span><span class="metric-icon icon-teal" aria-hidden="true">↗</span></div><div class="metric-value"><span id="metric-score">—</span><small>/ 100</small></div><div class="metric-description">Centroid-defuzzified result</div></article>
+          <article class="metric"><div class="metric-head"><span>Performance level</span><span class="metric-icon icon-purple" aria-hidden="true">◈</span></div><div class="metric-value metric-word"><span id="metric-level">—</span></div><div class="metric-description">Highest output membership</div></article>
+          <article class="metric"><div class="metric-head"><span>Rules fired</span><span class="metric-icon icon-orange" aria-hidden="true">⌁</span></div><div class="metric-value"><span id="metric-rules">—</span><small>/ 18</small></div><div class="metric-description">Positive activation strength</div></article>
+          <article class="metric"><div class="metric-head"><span>Model</span><span class="metric-icon icon-blue" aria-hidden="true">ƒ</span></div><div class="metric-value metric-word">Mamdani</div><div class="metric-description">Min–max fuzzy inference</div></article>
+        </div>
+        <div class="insight-grid">
+          <article class="panel result-panel">
+            <div class="panel-heading"><div><p class="panel-kicker">THE OUTPUT</p><h3>Performance assessment</h3></div><span class="panel-chip">EXPLAINABLE RESULT</span></div>
+            <div class="result-flex"><div id="score-ring" class="score-ring"><div class="ring-inner"><strong id="ring-score">—</strong><small>OUT OF 100</small></div></div><div class="result-description"><div id="result-level" class="level-pill level-average">Average</div><h4 id="result-heading">Evaluating profile…</h4><p id="result-explanation">Update the profile to see the current result.</p></div></div>
+            <div class="level-legend" aria-label="Possible output levels"><span><i class="swatch poor"></i>Poor</span><span><i class="swatch average"></i>Average</span><span><i class="swatch good"></i>Good</span><span><i class="swatch excellent"></i>Excellent</span></div>
+          </article>
+          <article class="panel memberships-panel">
+            <div class="panel-heading"><div><p class="panel-kicker">INPUT MEMBERSHIP ANALYSIS</p><h3>Input membership degrees</h3></div><span class="panel-chip">µ ∈ [0, 1]</span></div>
+            <p class="section-description">Live Low, Medium, and High membership values for this profile.</p>
+            <div id="input-memberships" class="membership-list" aria-label="Membership degree bars"></div>
+          </article>
+        </div>
+        <article class="panel chart-panel">
+          <div class="panel-heading"><div><p class="panel-kicker">OUTPUT DISTRIBUTION</p><h3>Fuzzy output and centroid</h3></div><span id="centroid-value" class="panel-chip">CENTROID —</span></div>
+          <p class="section-description">The chart shows the combined fuzzy output and its centroid score.</p>
+          <p class="mobile-chart-hint">Swipe sideways to inspect the full chart →</p>
+          <div id="output-chart" class="chart-wrap" role="img" aria-label="Aggregated output membership function chart"></div>
+          <div class="chart-legend"><span><i class="swatch poor"></i>Poor</span><span><i class="swatch average"></i>Average</span><span><i class="swatch good"></i>Good</span><span><i class="swatch excellent"></i>Excellent</span><span><i class="swatch aggregated"></i>Aggregated</span><span><i class="swatch centroid"></i>Centroid</span></div>
+        </article>
+        <article class="panel rules-preview">
+          <div class="panel-heading"><div><p class="panel-kicker">RULE ACTIVATIONS</p><h3>Strongest activated rules</h3></div><button id="see-all-rules" type="button" class="text-button">View all rules ↗</button></div>
+          <div id="top-rules"></div>
+        </article>
+      </section>
+      <section id="tab-rules" class="tab-panel" role="tabpanel" aria-labelledby="nav-rules" hidden>
+        <div class="section-title"><div><p class="eyebrow">INFERENCE ANALYTICS</p><h2>Inference rule activity</h2></div></div>
+        <article class="panel rules-guide"><div class="panel-heading"><div><p class="panel-kicker">MODEL CONFIGURATION</p><h3>Rule-based scoring engine</h3></div><span class="panel-chip">18 RULES</span></div><p>The dashboard processes a defined set of 18 fuzzy inference rules. Review rule activation and contribution for the current student profile.</p></article>
+        <article class="panel"><div class="panel-heading"><div><p class="panel-kicker">CURRENT INPUT VALUES</p><h3>Rule activation details</h3></div><label class="check-filter"><input id="only-active" type="checkbox"> Fired rules only</label></div><div id="rules-table" class="table-scroller"></div></article>
+      </section>
+      <section id="tab-memberships" class="tab-panel" role="tabpanel" aria-labelledby="nav-memberships" hidden>
+        <div class="section-title"><div><p class="eyebrow">MEMBERSHIP ANALYTICS</p><h2>Input signal distribution</h2></div></div>
+        <article class="panel"><div class="panel-heading"><div><p class="panel-kicker">INPUT MEMBERSHIP ANALYSIS</p><h3>Input signal membership curves</h3></div></div><p class="section-description">The marker indicates the current input value against Low, Medium and High membership curves.</p><div id="membership-charts" class="small-chart-grid"></div></article>
+        <article class="panel output-sets-panel"><div class="panel-heading"><div><p class="panel-kicker">OUTPUT MEMBERSHIPS</p><h3>Performance band distribution</h3></div></div><div id="output-sets-chart" class="chart-wrap"></div><div class="chart-legend"><span><i class="swatch poor"></i>Poor</span><span><i class="swatch average"></i>Average</span><span><i class="swatch good"></i>Good</span><span><i class="swatch excellent"></i>Excellent</span></div></article>
+        <article class="panel"><div class="panel-heading"><div><p class="panel-kicker">MODEL PARAMETERS</p><h3>Membership function configuration</h3></div></div><div id="parameters-table" class="table-scroller"></div></article>
+      </section>
+      <section id="tab-compare" class="tab-panel" role="tabpanel" aria-labelledby="nav-compare" hidden>
+        <div class="section-title"><div><p class="eyebrow">PROFILE COMPARISON</p><h2>Student profile comparison</h2></div></div>
+        <article class="panel"><div class="panel-heading compare-heading"><div><p class="panel-kicker">SCENARIO COMPARISON</p><h3>Current profile vs. benchmark</h3></div><div class="select-wrap"><label for="comparison-preset">Compare against</label><select id="comparison-preset"><option value="excellent">High achiever</option><option value="balanced">Balanced student</option><option value="support">Needs support</option><option value="attendance">Low attendance</option></select></div></div>
+          <div class="comparison-grid"><div class="compare-card compare-current"><span class="compare-overline">PROFILE A · YOUR INPUTS</span><strong id="compare-score-a">—</strong><span id="compare-level-a" class="compare-level">—</span><div class="comparison-track"><div id="compare-bar-a" class="comparison-fill"></div></div></div><div class="compare-card compare-reference"><span class="compare-overline">PROFILE B · REFERENCE</span><strong id="compare-score-b">—</strong><span id="compare-level-b" class="compare-level">—</span><div class="comparison-track"><div id="compare-bar-b" class="comparison-fill"></div></div></div></div>
+          <div id="comparison-insight" class="comparison-insight"></div><div id="comparison-table" class="table-scroller"></div>
+          <p class="footnote">Estimates are based on configured fuzzy rules; they are not official academic grades.</p>
+        </article>
+      </section>
+
+
+      <footer class="footer"><span>FuzzyLab · Student Performance Analytics</span><span>Private browser-based analysis · No account required</span></footer>
+    </main>
+  </div>
+</body>
+</html>
